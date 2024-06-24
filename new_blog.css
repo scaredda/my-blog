@@ -147,13 +147,13 @@ h3.notion-heading {
   letter-spacing: -0.5px !important;
   margin-bottom: 8px !important; }
 
-.notion-quote {
+/*.notion-quote {
   border: 0 !important;
   background: var(--quote-background) !important;
   border-radius: 7px !important;
   padding: 24px !important;
   font-size: 1.4rem !important;
-  letter-spacing: -0.2px !important; }
+  letter-spacing: -0.2px !important; }*/
 
 .notion-toggle {
   border: 1px solid var(--color-border-default) !important;
