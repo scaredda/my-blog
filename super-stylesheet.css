@@ -1,0 +1,685 @@
+/* ==========================================================================
+   Sergio Caredda — Super.so brand stylesheet
+   --------------------------------------------------------------------------
+   Paste this whole file into:
+       Super.so → Site → Settings → Code → Custom CSS
+   --------------------------------------------------------------------------
+   Layered as follows. Edit by section.
+
+     §0  Existing custom CSS (preserved verbatim)
+     §1  Brand tokens (CSS variables)
+     §2  Webfonts (Google Fonts via @import)
+     §3  Page chrome (body, nav, footer, breadcrumbs)
+     §4  Typography (h1–h4, body, links, lists)
+     §5  Pull-quotes (Averia Serif Libre)
+     §6  Notion color remap (the 9 colors → brand palette)
+     §7  Callouts → brand panel cards
+     §8  Tags / chips
+     §9  Database / collection cards (essays grid, library cards)
+     §10 Table of Contents (sidebar)
+     §11 Library page header — gray decorative motif fix
+     §12 Forms, comments, dark-mode tweaks
+
+   Notes
+   - Specificity: most Notion classes are auto-generated; we use !important
+     sparingly, only where Super inlines styles we need to override.
+   - Dark mode: Super toggles `.dark` on the body. Brand tokens have a dark
+     override in §1. The site uses light by default.
+   - Block-scoped overrides (e.g. #block-9783dd28...) live in §0 untouched.
+   ========================================================================== */
+
+
+/* §0 ============================================================
+   EXISTING CUSTOM CSS — PRESERVED VERBATIM
+   Do not delete. These are the rules that were already on your site.
+   ============================================================ */
+
+.notion-callout.bg-gray-light.border {
+  font-size: 0.8rem !important;
+}
+.notion-callout.bg-gray-light.border .notion-icon.text {
+  font-size: 0.8rem !important;
+}
+
+a[href*="amazon.com"]::after,
+a[href*="amzn.to"]::after {
+  font: var(--fa-font-brands);
+  content: "\f270";
+  text-decoration: none !important;
+  border: none;
+  margin-left: 3px;
+  vertical-align: middle;
+}
+
+#block-9783dd28671c47dfaf389027e600dd0c ul { list-style-type: none; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="flipboard.com"]::before  { font: var(--fa-font-brands); font-weight: 900; content: "\f44d"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="medium.com"]::before    { font: var(--fa-font-brands); font-weight: 900; content: "\f23a"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="goodreads.com"]::before { font: var(--fa-font-brands); font-weight: 900; content: "\f3a8"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="pinterest.com"]::before { font: var(--fa-font-brands); font-weight: 900; content: "\f0d2"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="getpocket.com"]::before { font: var(--fa-font-brands); font-weight: 900; content: "\f265"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="readwise.io"]::before   { font-family: 'Font Awesome Kit'; font-weight: 900; content: "\e000"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="threads.net"]::before   { font: var(--fa-font-brands); font-weight: 900; content: "\e618"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c li a[href*="x.com"]::before             { font: var(--fa-font-brands); font-weight: 900; content: "\e61b"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+#block-9783dd28671c47dfaf389027e600dd0c ul li a[href*="refind.com"]::before    { font: var(--fa-font-solid); font-weight: 900; content: "\f140"; margin-right: 4px; margin-left: -20px; display: inline-block; }
+
+.notion-at { display: none; }
+
+
+/* §1 ============================================================
+   BRAND TOKENS
+   ============================================================ */
+
+:root {
+  /* Brand palette */
+  --sc-corporate-blue:  #0054A8;
+  --sc-accent-cyan:     #0095D6;
+  --sc-vine-red:        #A04465;
+  --sc-orange:          #EB785F;
+  --sc-yellow-accent:   #D6B87C;
+
+  /* Overlay tints (60% over white) */
+  --sc-cyan-ol:         #8EE0DA;
+  --sc-cyan-accent:     #A5FAEB;
+  --sc-green-accent:    #C0FAA5;
+  --sc-green-ol:        #A5E099;
+
+  /* Neutrals */
+  --sc-bg:              #FFFFFF;
+  --sc-page-bg:         #F8F9FA;
+  --sc-base-gray:       #DBE4ED;
+  --sc-medium-gray:     #A1AAB5;
+  --sc-text:            #444444;          /* slightly darker than brand book for readability */
+  --sc-text-muted:      #787878;
+  --sc-dark-text:       #222222;
+
+  /* Semantic */
+  --sc-border:          #E6ECF2;
+  --sc-accent:          var(--sc-corporate-blue);
+  --sc-accent-hover:    #00468C;
+  --sc-accent-soft:     #DBE7F4;          /* tinted blue surface */
+  --sc-warm-soft:       #F4ECD8;          /* sand panel */
+  --sc-vine-soft:       #F1E1E8;
+  --sc-orange-soft:     #FCE6E1;
+  --sc-mint-soft:       #E5F4F0;
+
+  /* Type */
+  --sc-font-display: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sc-font-body:    'DM Sans', 'Montserrat', system-ui, -apple-system, sans-serif;
+  --sc-font-script:  'Averia Serif Libre', Georgia, serif;
+  --sc-font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Radii / shadow */
+  --sc-r-md:  8px;
+  --sc-r-lg:  14px;
+  --sc-r-xl:  24px;
+  --sc-r-pill: 999px;
+  --sc-shadow-sm: 0 2px 6px rgba(34, 34, 34, 0.06);
+  --sc-shadow-md: 0 6px 18px rgba(0, 84, 168, 0.08);
+  --sc-shadow-lg: 0 14px 36px rgba(0, 84, 168, 0.12);
+}
+
+/* Dark-mode overrides — Super applies `.dark` on body */
+body.dark {
+  --sc-page-bg:    #0E1217;
+  --sc-bg:         #161A21;
+  --sc-text:       #C9D1DA;
+  --sc-text-muted: #9AA4B0;
+  --sc-dark-text:  #F2F4F7;
+  --sc-base-gray:  #1F2630;
+  --sc-border:     #232A35;
+  --sc-accent-soft: #122236;
+  --sc-warm-soft:  #2A2418;
+  --sc-vine-soft:  #2A1A20;
+  --sc-orange-soft:#2A1B17;
+  --sc-mint-soft:  #15231F;
+}
+
+
+/* §2 ============================================================
+   WEBFONTS
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&family=DM+Sans:wght@300;400;500;700&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+
+
+/* §3 ============================================================
+   PAGE CHROME — body, nav, footer, breadcrumbs
+   ============================================================ */
+
+html, body {
+  background: var(--sc-page-bg);
+  color: var(--sc-text);
+  font-family: var(--sc-font-body);
+  font-feature-settings: "ss01", "kern";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Top navigation bar — Super's wrapper */
+.super-navbar,
+.notion-navbar,
+[class*="super-navbar"] {
+  background: rgba(248, 249, 250, 0.85) !important;
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--sc-border);
+}
+body.dark .super-navbar,
+body.dark .notion-navbar,
+body.dark [class*="super-navbar"] {
+  background: rgba(14, 18, 23, 0.85) !important;
+  border-bottom-color: var(--sc-border);
+}
+
+/* Nav site title (the "Sergio Caredda" wordmark) */
+.super-navbar a,
+.super-navbar [class*="title"],
+.notion-navbar a {
+  font-family: var(--sc-font-display);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+/* Nav menu items */
+.super-navbar nav a,
+.notion-navbar nav a {
+  font-family: var(--sc-font-display);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--sc-text);
+  transition: color 150ms ease;
+}
+.super-navbar nav a:hover,
+.notion-navbar nav a:hover {
+  color: var(--sc-accent);
+}
+
+/* "Start Here" pill — preserve dark fill, brand the typography */
+.super-navbar a[href*="start"],
+.super-navbar a[class*="cta"],
+.super-navbar button,
+.notion-navbar a[href*="start"] {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+  border-radius: var(--sc-r-md) !important;
+}
+
+/* Breadcrumbs (Sergio Caredda / Essays / …) */
+.notion-breadcrumbs,
+[class*="breadcrumb"] {
+  font-family: var(--sc-font-display);
+  font-size: 13px;
+  color: var(--sc-text-muted);
+}
+.notion-breadcrumbs a,
+[class*="breadcrumb"] a {
+  color: var(--sc-text-muted);
+}
+.notion-breadcrumbs a:hover,
+[class*="breadcrumb"] a:hover {
+  color: var(--sc-accent);
+}
+
+
+/* §4 ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+/* Page title (large, like "Organisation Evolution Framework") */
+.notion-title,
+.notion-page-title,
+h1.notion-h1,
+.notion-h1.notion-h1-bold {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 700 !important;
+  font-size: clamp(2rem, 4vw, 3rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--sc-dark-text) !important;
+}
+
+/* H1 inside the article body */
+.notion-h1 {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 700 !important;
+  font-size: 2.25rem !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.018em !important;
+  color: var(--sc-dark-text) !important;
+  margin-top: 2.4em !important;
+  margin-bottom: 0.5em !important;
+}
+
+/* H2 */
+.notion-h2 {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+  font-size: 1.75rem !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.012em !important;
+  color: var(--sc-dark-text) !important;
+  margin-top: 2em !important;
+  margin-bottom: 0.4em !important;
+}
+
+/* H3 */
+.notion-h3 {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+  font-size: 1.375rem !important;
+  line-height: 1.25 !important;
+  color: var(--sc-dark-text) !important;
+  margin-top: 1.6em !important;
+  margin-bottom: 0.3em !important;
+}
+
+/* Body text */
+.notion-text,
+.notion-text__content,
+.notion-list-item__content,
+.notion-toggle__summary,
+.notion-numbered-list,
+.notion-bulleted-list {
+  font-family: var(--sc-font-body) !important;
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+  color: var(--sc-text) !important;
+  text-wrap: pretty;
+}
+
+/* Strong / em inside body */
+.notion-text b, .notion-text strong { color: var(--sc-dark-text); font-weight: 700; }
+.notion-text i, .notion-text em { font-style: italic; }
+
+/* Links — corporate blue, subtle underline on hover */
+.notion-text a,
+.notion-list-item a,
+a.notion-link {
+  color: var(--sc-accent) !important;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(0, 84, 168, 0.32);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease, color 150ms ease;
+}
+.notion-text a:hover,
+.notion-list-item a:hover,
+a.notion-link:hover {
+  color: var(--sc-accent-hover) !important;
+  text-decoration-color: var(--sc-accent);
+}
+
+/* Inline code */
+.notion-text code,
+.notion-inline-code {
+  font-family: var(--sc-font-mono) !important;
+  font-size: 0.9em !important;
+  background: var(--sc-base-gray) !important;
+  color: var(--sc-dark-text) !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  border: none !important;
+}
+
+/* Property table on article header (Written by / Posted on / Tags) */
+.notion-property,
+.notion-collection-row__property,
+[class*="property-name"] {
+  font-family: var(--sc-font-display);
+  font-size: 13px;
+  color: var(--sc-text-muted);
+  letter-spacing: 0.02em;
+}
+.notion-property__value,
+[class*="property-value"] {
+  font-family: var(--sc-font-body);
+  font-size: 15px;
+  color: var(--sc-dark-text);
+}
+
+
+/* §5 ============================================================
+   PULL-QUOTES — Averia Serif Libre
+   ============================================================ */
+.notion-quote {
+  font-family: var(--sc-font-script) !important;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.35rem !important;
+  line-height: 1.45 !important;
+  color: var(--sc-dark-text) !important;
+  border-left: 3px solid var(--sc-accent) !important;
+  padding: 4px 0 4px 24px !important;
+  margin: 1.5em 0 !important;
+  background: transparent !important;
+}
+.notion-quote em, .notion-quote i { font-style: normal; }
+
+
+/* §6 ============================================================
+   NOTION COLOR REMAP — the 9 backgrounds → brand palette
+   --------------------------------------------------------------
+   In Notion, when you highlight a piece of text or a callout with
+   a color, it gets a class like .notion-blue_background. Super
+   inherits these. We remap each to a brand-correct surface.
+   ============================================================ */
+
+/* ----- Inline text highlights ----- */
+.notion-blue             { color: var(--sc-corporate-blue); }
+.notion-red              { color: var(--sc-vine-red); }
+.notion-orange           { color: var(--sc-orange); }
+.notion-yellow           { color: #B58A3C; }              /* readable on white */
+.notion-green            { color: #4A8B6F; }
+.notion-purple           { color: #6E5BA0; }
+.notion-pink             { color: var(--sc-vine-red); }
+.notion-brown            { color: #8A6A4A; }
+.notion-gray             { color: var(--sc-text-muted); }
+
+/* ----- Background fills (text run / callout / chip) ----- */
+.notion-blue_background,
+.notion-blue-background {
+  background: var(--sc-accent-soft) !important;
+  color: var(--sc-dark-text) !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.notion-red_background,
+.notion-red-background,
+.notion-pink_background,
+.notion-pink-background {
+  background: var(--sc-vine-soft) !important;
+  color: var(--sc-vine-red) !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.notion-orange_background,
+.notion-orange-background {
+  background: var(--sc-orange-soft) !important;
+  color: #C24A30 !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.notion-yellow_background,
+.notion-yellow-background {
+  background: var(--sc-warm-soft) !important;
+  color: #6D4F1F !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.notion-green_background,
+.notion-green-background {
+  background: var(--sc-mint-soft) !important;
+  color: #2F6A52 !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.notion-purple_background,
+.notion-purple-background,
+.notion-brown_background,
+.notion-brown-background {
+  background: #ECE6F5 !important;
+  color: #4F3D7A !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.notion-gray_background,
+.notion-gray-background {
+  background: var(--sc-base-gray) !important;
+  color: var(--sc-dark-text) !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+
+/* §7 ============================================================
+   CALLOUTS — brand panel cards
+   --------------------------------------------------------------
+   Default callout (gray): subtle base panel.
+   Colored callouts pick up matching brand surface + left rule.
+   ============================================================ */
+
+.notion-callout {
+  font-family: var(--sc-font-body);
+  background: var(--sc-base-gray) !important;
+  color: var(--sc-text) !important;
+  border-radius: var(--sc-r-lg) !important;
+  border: none !important;
+  padding: 18px 22px !important;
+  margin: 1.4em 0 !important;
+  box-shadow: var(--sc-shadow-sm);
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+.notion-callout:hover {
+  box-shadow: var(--sc-shadow-md);
+}
+
+/* The icon column inside a callout */
+.notion-callout .notion-icon {
+  margin-right: 14px !important;
+  flex-shrink: 0;
+}
+
+/* Color variants — Notion attaches the bg class on the callout itself */
+.notion-callout.notion-blue_background,
+.notion-callout.notion-blue-background {
+  background: var(--sc-accent-soft) !important;
+  border-left: 3px solid var(--sc-accent) !important;
+}
+.notion-callout.notion-yellow_background,
+.notion-callout.notion-yellow-background {
+  background: var(--sc-warm-soft) !important;
+  border-left: 3px solid var(--sc-yellow-accent) !important;
+  color: #5C4318 !important;
+}
+.notion-callout.notion-orange_background,
+.notion-callout.notion-orange-background {
+  background: var(--sc-orange-soft) !important;
+  border-left: 3px solid var(--sc-orange) !important;
+}
+.notion-callout.notion-red_background,
+.notion-callout.notion-red-background,
+.notion-callout.notion-pink_background,
+.notion-callout.notion-pink-background {
+  background: var(--sc-vine-soft) !important;
+  border-left: 3px solid var(--sc-vine-red) !important;
+}
+.notion-callout.notion-green_background,
+.notion-callout.notion-green-background {
+  background: var(--sc-mint-soft) !important;
+  border-left: 3px solid #4A8B6F !important;
+}
+.notion-callout.notion-gray_background,
+.notion-callout.notion-gray-background {
+  background: var(--sc-base-gray) !important;
+}
+
+
+/* §8 ============================================================
+   TAGS / CHIPS (multi-select properties on collections)
+   --------------------------------------------------------------
+   Notion's coloured tags ("Behavioural Based Model", "People",
+   "Featured", "Organisation"…) — each carries a notion-{color}_background
+   class. We remap them via the rules in §6, but tighten the chip shape:
+   ============================================================ */
+.notion-property-multi_select__item,
+.notion-property-select__item,
+.notion-tag,
+[class*="property-select"] [class*="item"] {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.01em;
+  border-radius: var(--sc-r-pill) !important;
+  padding: 3px 10px !important;
+  border: none !important;
+  line-height: 1.35;
+}
+
+
+/* §9 ============================================================
+   COLLECTION CARDS — Featured Essay, library cards, gallery views
+   ============================================================ */
+
+.notion-collection-card,
+.notion-gallery__card,
+[class*="collection-card"] {
+  background: var(--sc-bg) !important;
+  border: 1px solid var(--sc-border) !important;
+  border-radius: var(--sc-r-lg) !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease;
+}
+.notion-collection-card:hover,
+.notion-gallery__card:hover,
+[class*="collection-card"]:hover {
+  box-shadow: var(--sc-shadow-md) !important;
+  transform: translateY(-2px);
+  border-color: var(--sc-accent-soft) !important;
+}
+
+/* Card title */
+.notion-collection-card__title,
+.notion-collection-card .notion-page-title,
+[class*="collection-card"] [class*="title"] {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.012em;
+  color: var(--sc-dark-text) !important;
+}
+
+/* Card cover image rounding */
+.notion-collection-card__cover,
+[class*="collection-card"] img,
+[class*="collection-card"] [class*="cover"] {
+  border-radius: 0 !important;     /* full bleed inside the rounded card */
+}
+
+
+/* §10 ===========================================================
+   TABLE OF CONTENTS — sidebar TOC block
+   --------------------------------------------------------------
+   The "Contents" sidebar (Pareto Principle, Laws of Org Design)
+   currently has a dusty pink panel; restyle as base-gray.
+   ============================================================ */
+.notion-table_of_contents,
+[class*="table-of-contents"],
+[class*="table_of_contents"] {
+  background: var(--sc-base-gray) !important;
+  border: none !important;
+  border-radius: var(--sc-r-lg) !important;
+  padding: 18px 22px !important;
+}
+.notion-table_of_contents .notion-table_of_contents__item,
+[class*="table-of-contents"] a {
+  font-family: var(--sc-font-body) !important;
+  font-size: 14px !important;
+  color: var(--sc-text) !important;
+  padding: 4px 0;
+  line-height: 1.45;
+  text-decoration: none;
+  border: none;
+}
+.notion-table_of_contents a:hover,
+[class*="table-of-contents"] a:hover {
+  color: var(--sc-accent) !important;
+}
+
+
+/* §11 ===========================================================
+   LIBRARY PAGE HEADER — hide the unintended gray decorative shape
+   --------------------------------------------------------------
+   On library pages (Leadership Models, etc) the page-icon renders
+   correctly as the brand circle motif, but a large *gray* "9" /
+   quote glyph appears behind the title. This is Notion's default
+   page-icon render at scale — we suppress it on those pages.
+   --------------------------------------------------------------
+   If you tag library pages with a slug like /leadership-library,
+   /business-models, etc., these selectors will catch them.
+   To target site-wide, drop the [data-page] qualifier.
+   ============================================================ */
+[data-page*="library"] .notion-page-cover-icon,
+[data-page*="library"] .notion-page__icon-decoration,
+.notion-page-cover-icon[style*="background-image"][style*="?9"],
+.notion-emoji-default-large {
+  display: none;
+}
+
+/* If you'd prefer to keep it but shrink it: comment the rule above
+   and uncomment this:
+.notion-page-cover-icon { transform: scale(0.4); opacity: 0.5; }
+*/
+
+
+/* §12 ===========================================================
+   FORMS, COMMENTS, MISCELLANY
+   ============================================================ */
+
+/* "Rate this article" + comment widget container */
+[class*="comment"],
+[class*="rating"] {
+  font-family: var(--sc-font-body);
+}
+
+/* Textareas and inputs */
+input[type="text"],
+input[type="email"],
+textarea {
+  font-family: var(--sc-font-body) !important;
+  border: 1px solid var(--sc-border) !important;
+  border-radius: var(--sc-r-md) !important;
+  padding: 10px 14px;
+  background: var(--sc-bg);
+  color: var(--sc-dark-text);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--sc-accent) !important;
+  box-shadow: 0 0 0 3px var(--sc-accent-soft);
+}
+
+/* Buttons */
+button:not(.notion-toggle__button):not([class*="icon"]) {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: var(--sc-r-md);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+/* Dividers */
+.notion-divider,
+hr {
+  border: none !important;
+  border-top: 1px solid var(--sc-border) !important;
+  margin: 2.4em 0 !important;
+}
+
+/* Image captions */
+.notion-image__caption,
+figcaption {
+  font-family: var(--sc-font-body);
+  font-size: 13px;
+  color: var(--sc-text-muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Footer */
+.super-footer,
+[class*="super-footer"] {
+  font-family: var(--sc-font-body);
+  background: var(--sc-bg);
+  border-top: 1px solid var(--sc-border);
+  color: var(--sc-text-muted);
+}
+
+
+/* ==========================================================================
+   END OF STYLESHEET
+   ==========================================================================
+   If you change brand tokens, edit §1 only. Everything else is derived.
+   ========================================================================== */
