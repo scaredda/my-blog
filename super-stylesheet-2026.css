@@ -198,6 +198,42 @@ html, body {
   margin-top: 16px !important;
 }
 
+/* Tighten the top of the homepage article container itself, and center
+   the tagline (the first .notion-text inside .notion-root). The tagline
+   block id is 6136d1971ea341028ec5f1f19bae6dfb. The empty notion-text
+   that follows is just a Notion spacer — collapse it so the tagline sits
+   close to "Featured Essay". */
+#page-index .notion-root,
+.page__index .notion-root { padding-top: 0 !important; margin-top: 0 !important; }
+
+#page-index #block-6136d1971ea341028ec5f1f19bae6dfb,
+.page__index #block-6136d1971ea341028ec5f1f19bae6dfb {
+  text-align: center !important;
+  margin: 0 auto 16px auto !important;
+  max-width: 720px !important;
+  font-family: var(--sc-font-display) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--sc-text-muted, #6b6b6b) !important;
+  line-height: 1.4 !important;
+}
+#page-index #block-6136d1971ea341028ec5f1f19bae6dfb *,
+.page__index #block-6136d1971ea341028ec5f1f19bae6dfb * {
+  text-align: center !important;
+  font-family: inherit !important;
+  letter-spacing: inherit !important;
+  font-weight: inherit !important;
+  color: inherit !important;
+}
+
+/* Collapse empty notion-text spacers on the homepage */
+#page-index .notion-root > .notion-text:empty,
+.page__index .notion-root > .notion-text:empty {
+  display: none !important;
+}
+
 .notion-header__icon-wrapper {
   margin-bottom: 16px !important;
 }
@@ -422,6 +458,109 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 
 /* Hide the brown-toggle "Amazon affiliate" footer toggle */
 .notion-toggle.bg-brown { display: none !important; }
+
+
+/* §6c ==== "FOLLOW ME" SIDEBAR LINKS ======================================
+   Homepage right-rail social link list. Override the body-link convention
+   (underlined, accent color) — these are nav, not body. Plain black, no
+   underline; muted gray on hover. Scoped to the specific Notion block id.
+   ===================================================================== */
+
+#block-9783dd28671c47dfaf389027e600dd0c .notion-list-item .notion-link,
+#block-9783dd28671c47dfaf389027e600dd0c .notion-list-item .notion-link.link {
+  color: var(--sc-dark-text, #111) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: color 150ms ease;
+}
+#block-9783dd28671c47dfaf389027e600dd0c .notion-list-item .notion-link:hover,
+#block-9783dd28671c47dfaf389027e600dd0c .notion-list-item .notion-link.link:hover {
+  color: var(--sc-accent, #1a4fa8) !important;
+  text-decoration: none !important;
+}
+
+
+/* §6b ==== TABLE OF CONTENTS (TOC) =========================================
+   Authors typically place the TOC inside a callout (Super's UI) — the
+   capture confirmed it's .notion-callout.bg-brown-light.border > .notion-callout__content
+   > .notion-table-of-contents. We strip the callout chrome for callouts
+   that contain a TOC, so the TOC reads as a compact sidebar list, not as
+   a heavy block. Uses :has() — Chrome 105+, Safari 15.4+, FF 121+. */
+
+.notion-callout:has(> .notion-callout__content > .notion-table-of-contents),
+.notion-callout:has(.notion-table-of-contents) {
+  background: transparent !important;
+  border: 0 !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+  padding: 12px 0 !important;
+  margin-bottom: 16px !important;
+}
+.notion-callout:has(.notion-table-of-contents):hover { box-shadow: none !important; }
+
+/* Hide the redundant indent-list icon on the TOC callout */
+.notion-callout:has(.notion-table-of-contents) > .notion-callout__icon {
+  display: none !important;
+}
+
+/* "Contents" label — eyebrow style */
+.notion-callout:has(.notion-table-of-contents) > .notion-callout__content > .notion-semantic-string:first-child {
+  font-family: var(--sc-font-display) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--sc-text-muted, #6b6b6b) !important;
+  display: block !important;
+  margin-bottom: 10px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid var(--sc-border) !important;
+}
+
+/* The TOC list itself — tight, compact, no bullets */
+.notion-table-of-contents {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  font-family: var(--sc-font-body) !important;
+  font-size: 13.5px !important;
+  line-height: 1.45 !important;
+}
+.notion-table-of-contents__item {
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+}
+.notion-table-of-contents__item .notion-link {
+  display: block !important;
+  padding: 3px 0 !important;
+  color: var(--sc-text, #2a2a2a) !important;
+  text-decoration: none !important;
+  border-radius: 0 !important;
+  transition: color 150ms ease;
+}
+.notion-table-of-contents__item .notion-link:hover {
+  color: var(--sc-accent, #1a4fa8) !important;
+  text-decoration: none !important;
+  background: transparent !important;
+}
+/* Tighten the inline-start indent (Notion uses 24px steps for hierarchy)
+   — bring it down to ~14px so nested items are clearly nested but not
+   pushing 3 levels deep across half the column. */
+.notion-table-of-contents .notion-semantic-string[style*="margin-inline-start: 24px"] {
+  margin-inline-start: 14px !important;
+}
+.notion-table-of-contents .notion-semantic-string[style*="margin-inline-start: 48px"] {
+  margin-inline-start: 28px !important;
+}
+.notion-table-of-contents .notion-semantic-string[style*="margin-inline-start: 72px"] {
+  margin-inline-start: 42px !important;
+}
+/* Strip bold from items that have it (the capture shows several items in bold) */
+.notion-table-of-contents__item .notion-semantic-string,
+.notion-table-of-contents__item .notion-semantic-string * {
+  font-weight: 500 !important;
+}
 
 
 /* §7 ===== NOTION COLOR REMAP ============================================= */
