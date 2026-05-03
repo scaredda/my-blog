@@ -1,0 +1,768 @@
+/* ==========================================================================
+   Sergio Caredda — Super.so Custom CSS  (sergiocaredda.eu)
+   Built 2026-05-03. Replaces blog-2026.css / new_blog.css.
+   --------------------------------------------------------------------------
+   All selectors here were verified against a saved render of the live site
+   (see super/audit-2026.md). Rules use !important only where Super inlines
+   styles or its built-in stylesheets out-specify ours.
+   --------------------------------------------------------------------------
+     §0  Webfonts (Google Fonts via @import — first, by spec)
+     §1  Brand tokens (CSS variables)
+     §2  Page chrome (body, nav, footer)
+     §3  Page header (cover, icon, title)
+     §4  Typography (headings, body, links, inline code)
+     §5  Quotes & dividers
+     §6  Callouts (bg-blue-light / bg-yellow-light / etc.)
+     §7  Notion color remap (text + background variants)
+     §8  Pills / tags
+     §9  Collection cards & galleries (Featured + Latest)
+     §10 Collection list view + dropdown filter (the pill-row picker)
+     §11 Images, captions, bookmarks
+     §12 Toggles, tables, code blocks
+     §13 Misc carry-overs (FA social block, Amazon marker)
+     §14 Responsive
+     §15 Dark mode token overrides
+   ========================================================================== */
+
+
+/* §0 ===== WEBFONTS ======================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&family=DM+Sans:wght@300;400;500;700&family=Averia+Serif+Libre:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+
+/* §1 ===== BRAND TOKENS ==================================================== */
+:root {
+  /* Brand palette */
+  --sc-corporate-blue: #0054A8;
+  --sc-accent-cyan:    #0095D6;
+  --sc-vine-red:       #A04465;
+  --sc-orange:         #EB785F;
+  --sc-yellow-accent:  #D6B87C;
+
+  /* Neutrals */
+  --sc-bg:             #FFFFFF;
+  --sc-page-bg:        #FFFFFF;
+  --sc-base-gray:      #DBE4ED;
+  --sc-medium-gray:    #A1AAB5;
+  --sc-text:           #444444;
+  --sc-text-muted:     #787878;
+  --sc-dark-text:      #222222;
+
+  /* Semantic */
+  --sc-border:         #E6ECF2;
+  --sc-accent:         var(--sc-corporate-blue);
+  --sc-accent-hover:   #00468C;
+  --sc-accent-soft:    #DBE7F4;
+  --sc-warm-soft:      #F4ECD8;
+  --sc-vine-soft:      #F1E1E8;
+  --sc-orange-soft:    #FCE6E1;
+  --sc-mint-soft:      #E5F4F0;
+
+  /* Type */
+  --sc-font-display: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sc-font-body:    'DM Sans', 'Montserrat', system-ui, -apple-system, sans-serif;
+  --sc-font-script:  'Averia Serif Libre', Georgia, serif;
+  --sc-font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Radii / shadow */
+  --sc-r-md:   8px;
+  --sc-r-lg:   14px;
+  --sc-r-xl:   24px;
+  --sc-r-pill: 999px;
+  --sc-shadow-sm: 0 2px 6px rgba(34,34,34,0.06);
+  --sc-shadow-md: 0 6px 18px rgba(0,84,168,0.08);
+  --sc-shadow-lg: 0 14px 36px rgba(0,84,168,0.12);
+
+  /* --- Override Super.so internal tokens (from notion.css/super.css) --- */
+  --layout-max-width: 1080px !important;
+  --column-spacing: 32px !important;
+  --color-border-default: var(--sc-border);
+  --color-card-bg:       var(--sc-bg);
+  --color-card-bg-hover: var(--sc-accent-soft);
+  --header-cover-height: 38vh !important;
+  --image-border-radii: 8px !important;
+  --callout-padding: 18px 22px !important;
+  --callout-border-radii: 14px !important;
+  --collection-card-gap: 24px;
+  --db-title-spacing: -0.012em !important;
+
+  /* Picker (dropdown filter) */
+  --picker-border-radius:      999px !important;
+  --picker-border-color:       var(--sc-border) !important;
+  --picker-text-color:         var(--sc-text) !important;
+  --picker-active-bg-color:    var(--sc-accent-soft) !important;
+  --picker-active-text-color:  var(--sc-corporate-blue) !important;
+  --picker-active-border-color: var(--sc-accent-soft) !important;
+  --picker-hover-bg-color:     var(--sc-base-gray) !important;
+  --picker-hover-text-color:   var(--sc-dark-text) !important;
+  --picker-hover-border-color: var(--sc-base-gray) !important;
+}
+
+
+/* §2 ===== PAGE CHROME ===================================================== */
+
+html, body {
+  background: var(--sc-page-bg) !important;
+  color: var(--sc-text) !important;
+  font-family: var(--sc-font-body) !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* Top nav — Super emits .super-navbar.minimal */
+.super-navbar {
+  background: rgba(255,255,255,0.85) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+          backdrop-filter: saturate(180%) blur(10px);
+  border-bottom: 1px solid var(--sc-border) !important;
+}
+.super-navbar__content { font-family: var(--sc-font-display) !important; }
+.super-navbar__item,
+.super-navbar__list,
+.super-navbar a { font-family: var(--sc-font-display) !important; }
+.super-navbar__item {
+  font-weight: 500 !important;
+  letter-spacing: -0.005em !important;
+  color: var(--sc-text) !important;
+}
+.super-navbar__item:hover { color: var(--sc-accent) !important; }
+.super-navbar__cta {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+  padding: 10px 16px !important;
+  border-radius: var(--sc-r-md) !important;
+  letter-spacing: 0 !important;
+}
+
+/* Footer — .super-footer.corners */
+.super-footer {
+  font-family: var(--sc-font-body) !important;
+  background: var(--sc-bg) !important;
+  border-top: 1px solid var(--sc-border) !important;
+  color: var(--sc-text-muted) !important;
+}
+.super-footer__logo-text {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+  color: var(--sc-dark-text) !important;
+}
+.super-footer__link p,
+.super-footer__link {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 500 !important;
+  color: var(--sc-text) !important;
+}
+.super-footer__link:hover p { color: var(--sc-accent) !important; }
+.super-footer__footnote {
+  font-family: var(--sc-font-body) !important;
+  font-size: 13px !important;
+  color: var(--sc-text-muted) !important;
+}
+.super-footer__icons a { color: var(--sc-text-muted) !important; transition: color 150ms ease; }
+.super-footer__icons a:hover { color: var(--sc-accent) !important; }
+
+
+/* §3 ===== PAGE HEADER ===================================================== */
+
+.notion-header__title-wrapper { margin-bottom: 24px !important; }
+/* Hide the empty first child Super sometimes injects above the icon */
+.notion-header__title-wrapper > div:first-child:empty { display: none !important; }
+
+.notion-header__icon-wrapper {
+  margin-bottom: 16px !important;
+}
+
+h1.notion-header__title {
+  font-family: var(--sc-font-display) !important;
+  font-size: clamp(2.25rem, 4vw, 3rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--sc-dark-text) !important;
+  text-wrap: balance;
+}
+h1.notion-header__title * {
+  line-height: 1.1 !important;
+  font-family: var(--sc-font-display) !important;
+}
+
+/* Centre titles on non-index pages (essays, library, etc.) */
+.super-root:not(.page__index) .notion-header__title,
+.super-content:not(.page__index) .notion-header__title {
+  text-align: center !important;
+  width: 100% !important;
+}
+
+/* Layout — keep the article column readable, then full-width still works */
+.notion-root.full-width,
+.notion-collection-page {
+  max-width: var(--layout-max-width) !important;
+  margin: 0 auto !important;
+}
+
+
+/* §4 ===== TYPOGRAPHY ====================================================== */
+
+/* Body text — Super gives us p.notion-text.notion-text__content */
+.notion-text,
+.notion-text__content,
+.notion-list-item,
+.notion-bulleted-list,
+.notion-numbered-list {
+  font-family: var(--sc-font-body) !important;
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+  color: var(--sc-text) !important;
+  text-wrap: pretty;
+}
+.notion-text strong, .notion-text__content strong { color: var(--sc-dark-text); font-weight: 700; }
+
+/* Headings inside body — h2.notion-heading / h3.notion-heading.
+   These were targeted as .notion-h2/.notion-h3 in the previous file (no match).
+   Super uses tag + .notion-heading. */
+h1.notion-heading,
+h2.notion-heading,
+h3.notion-heading,
+h4.notion-heading {
+  font-family: var(--sc-font-display) !important;
+  color: var(--sc-dark-text) !important;
+  letter-spacing: -0.012em !important;
+}
+h1.notion-heading {
+  font-size: 2.25rem !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  margin-top: 2.4em !important;
+  margin-bottom: 0.5em !important;
+}
+h2.notion-heading {
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  margin-top: 2em !important;
+  margin-bottom: 0.4em !important;
+}
+h3.notion-heading {
+  font-size: 1.375rem !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  margin-top: 1.6em !important;
+  margin-bottom: 0.3em !important;
+}
+h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading * {
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  font-family: var(--sc-font-display) !important;
+}
+
+/* Links — body always underlined, nav never. Super wraps in .notion-link. */
+.notion-link { opacity: 1 !important; transition: color 150ms ease, text-decoration-color 150ms ease; }
+
+.notion-text .notion-link,
+.notion-text__content .notion-link,
+.notion-list-item .notion-link,
+.notion-bulleted-list .notion-link,
+.notion-numbered-list .notion-link,
+.notion-quote .notion-link,
+.notion-callout .notion-link {
+  color: var(--sc-accent) !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-decoration-color: rgba(0, 84, 168, 0.32) !important;
+  text-underline-offset: 3px !important;
+}
+.notion-text .notion-link:hover,
+.notion-text__content .notion-link:hover,
+.notion-list-item .notion-link:hover,
+.notion-quote .notion-link:hover,
+.notion-callout .notion-link:hover {
+  color: var(--sc-accent-hover) !important;
+  text-decoration-color: var(--sc-accent) !important;
+  opacity: 1 !important;
+}
+
+/* Nav and footer links — no underline */
+.super-navbar .notion-link,
+.super-footer .notion-link,
+.notion-collection-card .notion-link,
+.notion-collection-list__item-anchor.notion-link {
+  text-decoration: none !important;
+}
+
+/* Inline code */
+.notion-text code,
+.notion-text__content code {
+  font-family: var(--sc-font-mono) !important;
+  font-size: 0.9em !important;
+  background: var(--sc-base-gray) !important;
+  color: var(--sc-dark-text) !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  border: none !important;
+}
+
+
+/* §5 ===== QUOTES & DIVIDERS ============================================== */
+
+.notion-quote {
+  font-family: var(--sc-font-script) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: 1.35rem !important;
+  line-height: 1.45 !important;
+  color: var(--sc-dark-text) !important;
+  border-left: 3px solid var(--sc-accent) !important;
+  padding: 6px 0 6px 24px !important;
+  margin: 1.5em 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+.notion-quote.large {
+  font-size: 1.5rem !important;
+  line-height: 1.4 !important;
+}
+.notion-quote em, .notion-quote i { font-style: normal; }
+
+.notion-divider, hr {
+  border: none !important;
+  border-top: 1px solid var(--sc-border) !important;
+  margin: 2.4em 0 !important;
+}
+
+
+/* §6 ===== CALLOUTS ======================================================== */
+/* Super uses .notion-callout.bg-<color>-light(.border) — verified in render */
+
+.notion-callout {
+  font-family: var(--sc-font-body) !important;
+  background: var(--sc-base-gray) !important;
+  color: var(--sc-text) !important;
+  border: none !important;
+  border-radius: var(--sc-r-lg) !important;
+  padding: 18px 22px !important;
+  margin: 1.4em 0 !important;
+  box-shadow: var(--sc-shadow-sm);
+  transition: box-shadow 220ms ease;
+}
+.notion-callout:hover { box-shadow: var(--sc-shadow-md); }
+.notion-callout__icon { margin-right: 14px !important; flex-shrink: 0; }
+.notion-callout__content { font-size: 16px !important; line-height: 1.55 !important; }
+
+.notion-callout.bg-blue-light,
+.notion-callout.bg-blue {
+  background: var(--sc-accent-soft) !important;
+  border-left: 3px solid var(--sc-accent) !important;
+}
+.notion-callout.bg-yellow-light,
+.notion-callout.bg-yellow {
+  background: var(--sc-warm-soft) !important;
+  border-left: 3px solid var(--sc-yellow-accent) !important;
+  color: #5C4318 !important;
+}
+.notion-callout.bg-orange-light,
+.notion-callout.bg-orange {
+  background: var(--sc-orange-soft) !important;
+  border-left: 3px solid var(--sc-orange) !important;
+}
+.notion-callout.bg-red-light,
+.notion-callout.bg-red,
+.notion-callout.bg-pink-light,
+.notion-callout.bg-pink {
+  background: var(--sc-vine-soft) !important;
+  border-left: 3px solid var(--sc-vine-red) !important;
+}
+.notion-callout.bg-green-light,
+.notion-callout.bg-green {
+  background: var(--sc-mint-soft) !important;
+  border-left: 3px solid #4A8B6F !important;
+}
+.notion-callout.bg-gray-light,
+.notion-callout.bg-gray {
+  background: var(--sc-base-gray) !important;
+}
+/* Don't show purple/brown stripes — remap to neutral */
+.notion-callout.bg-purple-light,
+.notion-callout.bg-purple,
+.notion-callout.bg-brown-light,
+.notion-callout.bg-brown {
+  background: var(--sc-base-gray) !important;
+  border-left: 3px solid var(--sc-medium-gray) !important;
+  color: var(--sc-text) !important;
+}
+
+/* Hide the brown-toggle "Amazon affiliate" footer toggle */
+.notion-toggle.bg-brown { display: none !important; }
+
+
+/* §7 ===== NOTION COLOR REMAP ============================================= */
+/* For inline color spans inside .notion-semantic-string. Super's class names
+   here are .text-<color> / .bg-<color>-light. We override both shapes. */
+
+.text-blue   { color: var(--sc-corporate-blue) !important; }
+.text-red    { color: var(--sc-vine-red) !important; }
+.text-orange { color: var(--sc-orange) !important; }
+.text-yellow { color: #B58A3C !important; }
+.text-green  { color: #4A8B6F !important; }
+.text-purple { color: #6E5BA0 !important; }
+.text-pink   { color: var(--sc-vine-red) !important; }
+.text-brown  { color: #8A6A4A !important; }
+.text-gray   { color: var(--sc-text-muted) !important; }
+
+
+/* §8 ===== PILLS / TAGS =================================================== */
+
+.notion-pill {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.01em !important;
+  border-radius: var(--sc-r-pill) !important;
+  padding: 3px 10px !important;
+  border: none !important;
+  line-height: 1.4 !important;
+}
+
+
+/* §9 ===== COLLECTION CARDS & GALLERIES =================================== */
+
+.notion-collection-gallery,
+.notion-collection-list { border: 0 !important; padding-top: 0 !important; margin-top: 16px !important; }
+
+.notion-collection-card {
+  background: var(--sc-bg) !important;
+  border: 1px solid var(--sc-border) !important;
+  border-radius: var(--sc-r-lg) !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease, opacity 220ms ease;
+}
+.notion-collection-card:hover {
+  box-shadow: var(--sc-shadow-md) !important;
+  transform: translateY(-2px) !important;
+  border-color: var(--sc-accent-soft) !important;
+  opacity: 1 !important;
+}
+
+.notion-collection-card__cover { border-radius: 0 !important; }
+.notion-collection-card__cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.notion-collection-card__property-list { margin-top: 12px !important; }
+.notion-collection-card__property { font-size: 1rem !important; }
+
+/* Title inside a card — keep .notion-property__title but on a card */
+.notion-collection-card .notion-property__title,
+.notion-collection-list .notion-property__title {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 700 !important;
+  letter-spacing: var(--db-title-spacing) !important;
+  color: var(--sc-dark-text) !important;
+  white-space: normal !important;
+}
+/* the title icon Notion injects — hide it (our cards already have the cover) */
+.notion-property__title__icon-wrapper { display: none !important; }
+
+/* SMALL gallery */
+.notion-collection-gallery.small .notion-collection-card__content { padding: 16px !important; }
+.notion-collection-gallery.small .notion-property__title { font-size: 1rem !important; line-height: 1.25 !important; }
+
+/* MEDIUM gallery */
+.notion-collection-gallery.medium { grid-template-columns: 1fr 1fr 1fr !important; gap: var(--collection-card-gap) !important; }
+.notion-collection-gallery.medium .notion-collection-card__content { padding: 18px !important; }
+.notion-collection-gallery.medium .notion-collection-card__property-list {
+  display: flex !important; flex-direction: column !important; gap: 6px !important;
+}
+.notion-collection-gallery.medium .notion-property__title {
+  font-size: 1.25rem !important; line-height: 1.2 !important; font-weight: 700 !important;
+}
+
+/* LARGE gallery — Featured Essay treatment */
+.notion-collection-gallery.large { grid-template-columns: 1fr !important; }
+.notion-collection-gallery.large .notion-collection-card {
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  min-height: 380px !important;
+  height: 380px !important;
+}
+.notion-collection-gallery.large .notion-collection-card .notion-collection-card__cover {
+  height: 100% !important;
+  flex: 1 1 50% !important;
+}
+.notion-collection-gallery.large .notion-collection-card .notion-collection-card__cover img,
+.notion-collection-gallery.large .notion-collection-card .notion-collection-card__cover.large {
+  height: 100% !important; width: 100% !important; object-fit: cover !important;
+}
+.notion-collection-gallery.large .notion-collection-card .notion-collection-card__content {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 40px !important;
+  flex: 1 1 50% !important;
+}
+.notion-collection-gallery.large .notion-collection-card .notion-collection-card__content::before {
+  content: "Featured" !important;
+  display: inline-block !important;
+  width: fit-content !important;
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  padding: 4px 10px !important;
+  background: var(--sc-accent-soft) !important;
+  color: var(--sc-corporate-blue) !important;
+  border-radius: var(--sc-r-pill) !important;
+  margin-bottom: 16px !important;
+}
+.notion-collection-gallery.large .notion-collection-card .notion-property__title {
+  font-size: 2.25rem !important;
+  line-height: 1.1 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.018em !important;
+  max-width: 600px !important;
+  margin-bottom: 8px !important;
+}
+.notion-collection-gallery.large .notion-collection-card .notion-pill { max-width: 100% !important; }
+.notion-collection-gallery.large .notion-collection-card .notion-collection-card__property-list {
+  overflow: visible !important;
+  display: flex !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  margin-top: 16px !important;
+}
+.notion-collection-gallery.large .notion-collection-card:nth-child(n+2) { display: none !important; }
+
+
+/* §10 ==== COLLECTION LIST + DROPDOWN FILTER ============================== */
+
+.notion-collection-list {
+  gap: 8px !important;
+  padding: 0 !important;
+  margin-top: 16px !important;
+}
+.notion-collection-list__item {
+  white-space: normal !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  border: 1px solid var(--sc-border) !important;
+  padding: 12px 14px !important;
+  border-radius: var(--sc-r-md) !important;
+  transition: background 220ms ease, border-color 220ms ease;
+}
+.notion-collection-list__item:hover {
+  background: var(--sc-base-gray) !important;
+  border-color: var(--sc-accent-soft) !important;
+}
+.notion-collection-list .notion-property__title { font-weight: 700 !important; }
+.notion-collection-list .notion-property__title .notion-semantic-string { white-space: pre-wrap !important; }
+.notion-collection-list .notion-property__title .notion-semantic-string span { border: none !important; }
+
+/* Dropdown filter — render as horizontal pill row on >= 576px */
+.notion-dropdown__menu-header,
+.notion-dropdown__option-icon,
+.notion-dropdown__button svg:first-of-type { display: none !important; }
+
+.super-root:not(.page__index) .notion-dropdown__option-list,
+.super-content:not(.page__index) .notion-dropdown__option-list {
+  justify-content: center !important;
+}
+
+@media all and (min-width: 576px) {
+  .notion-dropdown {
+    width: 100% !important;
+    z-index: 1 !important;
+    margin-bottom: 16px !important;
+  }
+  .notion-dropdown__button { display: none !important; }
+  .notion-dropdown__menu-wrapper { position: relative !important; }
+  .notion-dropdown__menu,
+  .notion-dropdown__menu.initial-state {
+    width: 100% !important;
+    margin: 0 auto !important;
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: var(--sc-r-md) !important;
+    transform: none !important;
+    left: auto !important;
+    top: auto !important;
+    position: relative !important;
+    opacity: 1 !important;
+  }
+  .notion-dropdown__menu.animate-in,
+  .notion-dropdown__menu.animate-out,
+  .notion-dropdown__menu.animate-in.animate-out { animation: none !important; }
+  .notion-dropdown__option-list {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    padding: 0 !important;
+  }
+  .notion-dropdown__option {
+    padding: 5px 12px !important;
+    border-radius: var(--picker-border-radius) !important;
+    border: 1px solid var(--picker-border-color) !important;
+    transition: all 0.15s ease-in-out !important;
+    align-items: center !important;
+  }
+  .notion-dropdown__option:hover {
+    background: var(--picker-hover-bg-color) !important;
+    border-color: var(--picker-hover-border-color) !important;
+  }
+  .notion-dropdown__option:hover p { color: var(--picker-hover-text-color) !important; }
+  .notion-dropdown__option.active {
+    background: var(--picker-active-bg-color) !important;
+    border-color: var(--picker-active-border-color) !important;
+  }
+  .notion-dropdown__option.active p { color: var(--picker-active-text-color) !important; }
+  .notion-dropdown__option p {
+    font-family: var(--sc-font-display) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.005em !important;
+    color: var(--picker-text-color) !important;
+  }
+}
+
+
+/* §11 ==== IMAGES, CAPTIONS, BOOKMARKS ===================================== */
+/* IMPORTANT: do NOT widen .page-width images. The previous rule
+     .parent-page__posts .notion-image.page-width { width:120% }
+   produced the broken render the user reported. Body class `parent-page__posts`
+   is not emitted on this site. We let Super's own align-* / size modifiers
+   control width and only override the visual treatment. */
+
+.notion-image img { border-radius: var(--image-border-radii); }
+.notion-image.align-end   img { margin-left: auto; }
+.notion-image.align-start img { margin-right: auto; }
+
+.notion-bookmark {
+  border: 1px solid var(--sc-border) !important;
+  border-radius: var(--sc-r-md) !important;
+  background: var(--sc-bg) !important;
+  transition: box-shadow 220ms ease, border-color 220ms ease;
+}
+.notion-bookmark:hover {
+  box-shadow: var(--sc-shadow-sm);
+  border-color: var(--sc-accent-soft) !important;
+}
+.notion-bookmark__title {
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+  color: var(--sc-dark-text) !important;
+}
+.notion-bookmark__description {
+  font-family: var(--sc-font-body) !important;
+  color: var(--sc-text-muted) !important;
+  font-size: 13px !important;
+}
+.notion-bookmark__link { color: var(--sc-text-muted) !important; font-size: 12px !important; }
+
+/* Embed iframes */
+.notion-embed__container > iframe { background: var(--sc-bg) !important; }
+
+
+/* §12 ==== TOGGLES, TABLES, CODE BLOCKS =================================== */
+
+.notion-toggle {
+  border: 1px solid var(--sc-border) !important;
+  border-radius: var(--sc-r-md) !important;
+  padding: 10px 14px !important;
+  margin-bottom: 8px !important;
+  background: var(--sc-bg);
+  transition: background 220ms ease;
+}
+.notion-toggle.open {
+  background: var(--sc-base-gray) !important;
+  padding-bottom: 16px !important;
+}
+.notion-toggle__summary { margin: 0 !important; }
+.notion-toggle h1.notion-heading,
+.notion-toggle h2.notion-heading,
+.notion-toggle h3.notion-heading { margin: 0 !important; }
+
+/* Tables */
+.notion-table table { border-collapse: collapse !important; width: 100%; font-family: var(--sc-font-body); font-size: 15px; }
+.notion-table th, .notion-table td {
+  border: 1px solid var(--sc-border) !important;
+  padding: 10px 14px !important;
+  text-align: left;
+}
+.notion-table th {
+  background: var(--sc-base-gray) !important;
+  color: var(--sc-dark-text) !important;
+  font-family: var(--sc-font-display) !important;
+  font-weight: 600 !important;
+}
+
+/* Code blocks */
+.notion-code {
+  font-family: var(--sc-font-mono) !important;
+  background: #0F1722 !important;
+  color: #E6ECF2 !important;
+  border-radius: var(--sc-r-md) !important;
+  padding: 16px 18px !important;
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+}
+.notion-code code, .notion-code pre { font-family: var(--sc-font-mono) !important; background: transparent !important; }
+
+
+/* §13 ==== CARRY-OVERS ====================================================
+   The FA social-icon block, Amazon affiliate marker, gray-callout font-size
+   tweak, and `.notion-at { display:none }` rule live in Super.so's Custom
+   CSS field directly — see super/super-custom-css-pasted.css.
+   They are NOT re-declared here to avoid double-application and to keep
+   page-specific block-id selectors close to the page editor.
+   ========================================================================= */
+
+
+/* §14 ==== RESPONSIVE ====================================================== */
+
+@media all and (max-width: 768px) {
+  h1.notion-header__title { font-size: 2rem !important; }
+  h1.notion-heading { font-size: 1.75rem !important; }
+  h2.notion-heading { font-size: 1.5rem !important; }
+  h3.notion-heading { font-size: 1.25rem !important; }
+
+  .notion-collection-gallery.medium { grid-template-columns: 1fr !important; }
+  .notion-collection-gallery.large .notion-collection-card {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  .notion-collection-gallery.large .notion-collection-card .notion-collection-card__cover {
+    height: 220px !important; flex: 0 0 220px !important;
+  }
+  .notion-collection-gallery.large .notion-collection-card .notion-property__title {
+    font-size: 1.5rem !important;
+  }
+  .notion-collection-gallery.large .notion-collection-card .notion-collection-card__content {
+    padding: 24px !important;
+  }
+}
+
+
+/* §15 ==== DARK MODE TOKEN OVERRIDES ====================================== */
+/* Super sets html.theme-dark on the <html>. Provide minimal overrides; the
+   site is a light-first editorial brand. */
+
+html.theme-dark {
+  --sc-bg:           #161A21;
+  --sc-page-bg:      #0E1217;
+  --sc-text:         #C9D1DA;
+  --sc-text-muted:   #9AA4B0;
+  --sc-dark-text:    #F2F4F7;
+  --sc-base-gray:    #1F2630;
+  --sc-border:       #232A35;
+  --sc-accent-soft:  #122236;
+  --sc-warm-soft:    #2A2418;
+  --sc-vine-soft:    #2A1A20;
+  --sc-orange-soft:  #2A1B17;
+  --sc-mint-soft:    #15231F;
+}
+
+html.theme-dark .super-navbar { background: rgba(14,18,23,0.85) !important; }
+
+
+/* ========================================================================== */
+/* END                                                                        */
+/* ========================================================================== */
