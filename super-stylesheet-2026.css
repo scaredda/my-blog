@@ -168,6 +168,14 @@ html, body {
 /* Hide the empty first child Super sometimes injects above the icon */
 .notion-header__title-wrapper > div:first-child:empty { display: none !important; }
 
+/* On the homepage we already have the SC mark in the navbar — suppress the
+   giant duplicate header icon. The wrapper is in the saved render as
+   .notion-header__icon-wrapper.has-icon-image inside #page-index. */
+#page-index .notion-header__icon-wrapper,
+.page__index .notion-header__icon-wrapper,
+#page-index .notion-header__cover.no-cover,
+.page__index .notion-header__cover.no-cover { display: none !important; }
+
 .notion-header__icon-wrapper {
   margin-bottom: 16px !important;
 }
@@ -573,19 +581,33 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
     margin-bottom: 16px !important;
   }
   .notion-dropdown__button { display: none !important; }
-  .notion-dropdown__menu-wrapper { position: relative !important; }
+  .notion-dropdown__menu-wrapper { position: relative !important; height: auto !important; }
+
+  /* CRITICAL: the rendered HTML has class "initial-state close" — Super's
+     own CSS collapses .close to height 0 / hides the option list. We force
+     the menu open + interactive on desktop, regardless of the close class. */
   .notion-dropdown__menu,
-  .notion-dropdown__menu.initial-state {
+  .notion-dropdown__menu.initial-state,
+  .notion-dropdown__menu.close,
+  .notion-dropdown__menu.initial-state.close,
+  .notion-dropdown__menu.open {
     width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
     margin: 0 auto !important;
     background: none !important;
     box-shadow: none !important;
+    border: none !important;
     border-radius: var(--sc-r-md) !important;
     transform: none !important;
     left: auto !important;
     top: auto !important;
     position: relative !important;
     opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+    display: block !important;
   }
   .notion-dropdown__menu.animate-in,
   .notion-dropdown__menu.animate-out,
@@ -595,6 +617,7 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
     gap: 8px !important;
     flex-wrap: wrap !important;
     padding: 0 !important;
+    pointer-events: auto !important;
   }
   .notion-dropdown__option {
     padding: 5px 12px !important;
@@ -602,6 +625,8 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
     border: 1px solid var(--picker-border-color) !important;
     transition: all 0.15s ease-in-out !important;
     align-items: center !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
   }
   .notion-dropdown__option:hover {
     background: var(--picker-hover-bg-color) !important;
@@ -619,6 +644,7 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
     font-weight: 500 !important;
     letter-spacing: -0.005em !important;
     color: var(--picker-text-color) !important;
+    pointer-events: auto !important;
   }
 }
 
