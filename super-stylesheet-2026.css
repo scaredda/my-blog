@@ -588,28 +588,29 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 
 
 /* §10b INLINE TAG LIST (homepage Tags column) ============================
-   The right-rail "Tags" inline collection list. Cap to 5 visible items,
-   tighten vertical rhythm, and turn the existing hashtag icon Super injects
-   into a small gray "#" prefix instead of the default 18px raster. */
+   Scoped to the specific Notion block id so it doesn't bleed into other
+   inline collection lists. If the block id changes, update the selector
+   below. The block lives in the homepage right rail.
+   ===================================================================== */
 
-.notion-collection.inline .notion-collection-list { gap: 6px !important; margin-top: 8px !important; }
+#block-440d0da99877463992f819b5198f679b .notion-collection-list { gap: 6px !important; margin-top: 8px !important; }
 
 /* Cap to 5 items */
-.notion-collection.inline .notion-collection-list > .notion-collection-list__item:nth-child(n+6) {
+#block-440d0da99877463992f819b5198f679b .notion-collection-list > .notion-collection-list__item:nth-child(n+6) {
   display: none !important;
 }
 
 /* Compact item */
-.notion-collection.inline .notion-collection-list__item {
+#block-440d0da99877463992f819b5198f679b .notion-collection-list__item {
   padding: 6px 10px !important;
   border-radius: var(--sc-r-sm) !important;
   flex-direction: row !important;
   align-items: center !important;
 }
 
-/* Re-show the icon wrapper inside inline collection lists ONLY (it's hidden globally
+/* Re-show the icon wrapper inside this block ONLY (it's hidden globally
    by the rule at §9). Then we rewrite its visual to a "#" glyph in gray. */
-.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper {
+#block-440d0da99877463992f819b5198f679b .notion-property__title__icon-wrapper {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -620,12 +621,12 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
   position: relative !important;
 }
 /* Hide the raster hashtag image */
-.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper .notion-icon,
-.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper img {
+#block-440d0da99877463992f819b5198f679b .notion-property__title__icon-wrapper .notion-icon,
+#block-440d0da99877463992f819b5198f679b .notion-property__title__icon-wrapper img {
   display: none !important;
 }
 /* Replace with a typographic "#" */
-.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper::before {
+#block-440d0da99877463992f819b5198f679b .notion-property__title__icon-wrapper::before {
   content: "#";
   font-family: var(--sc-font-display);
   font-weight: 600;
@@ -636,7 +637,7 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 }
 
 /* Title runs inline next to the # */
-.notion-collection.inline .notion-collection-list .notion-property__title {
+#block-440d0da99877463992f819b5198f679b .notion-property__title {
   font-size: 14px !important;
   font-weight: 600 !important;
   display: inline-flex !important;
@@ -656,115 +657,108 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 }
 
 @media all and (min-width: 576px) {
-  /* Wrapper layout */
-  html body .notion-dropdown {
+  /* === DROPDOWN AS PILL ROW ============================================
+     Mirrors the old working CSS structure exactly. The old CSS hid the
+     button with display:none and styled the menu open at rest, letting
+     Super's JS toggle .active on options for click feedback. We do the
+     same. We do NOT touch .close — Super's JS removes it on hydration.
+
+     We use descendant selectors (.notion-dropdown__menu-wrapper .notion-dropdown__menu)
+     for specificity that beats Super's own rules.
+     ===================================================================== */
+
+  .notion-dropdown {
     width: 100% !important;
     z-index: 1 !important;
     margin-bottom: 16px !important;
-    pointer-events: auto !important;
   }
 
-  /* Hide the button via visibility, NOT display:none — keeps Super's click
-     handler bindings intact in case it walks the DOM on init. */
-  html body .notion-dropdown__button {
-    visibility: hidden !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    border: 0 !important;
-  }
-
-  /* The wrapper around the popup menu — must allow clicks through to it */
-  html body .notion-dropdown__menu-wrapper {
-    position: relative !important;
-    height: auto !important;
-    pointer-events: auto !important;
-    overflow: visible !important;
-  }
-
-  /* CRITICAL: the rendered HTML has class "initial-state close" — Super's
-     own CSS collapses .close to opacity:0 / scale(.95) / pointer-events:none
-     and the button toggles it. We force the menu open + interactive on
-     desktop, regardless of close/initial-state/animate-out. We escalate
-     specificity with html body to outrank Super's own rules. */
-  html body .notion-dropdown__menu,
-  html body .notion-dropdown__menu.initial-state,
-  html body .notion-dropdown__menu.close,
-  html body .notion-dropdown__menu.initial-state.close,
-  html body .notion-dropdown__menu.open,
-  html body .notion-dropdown__menu.animate-in,
-  html body .notion-dropdown__menu.animate-out,
-  html body .notion-dropdown__menu.animate-in.animate-out {
+  .notion-dropdown__button {
+    justify-content: space-between !important;
     width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
-    margin: 0 auto !important;
-    background: none !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0 !important;
+    border: 1px solid var(--sc-border) !important;
+    padding: 10px !important;
+    border-radius: var(--sc-r-sm) !important;
+    display: none !important;  /* matches old working CSS */
+  }
+
+  .notion-dropdown__menu-wrapper {
+    position: relative !important;
+  }
+
+  .notion-dropdown__menu-wrapper .notion-dropdown__menu {
+    width: 100% !important;
+    border-radius: var(--sc-r-sm) !important;
     transform: none !important;
-    -webkit-transform: none !important;
     left: auto !important;
     top: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    position: relative !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    overflow: visible !important;
-    display: block !important;
-    animation: none !important;
-    -webkit-animation: none !important;
-    transition: none !important;
-    -webkit-transition: none !important;
-    clip-path: none !important;
-    -webkit-clip-path: none !important;
-    filter: none !important;
   }
 
-  html body .notion-dropdown__option-list {
+  .notion-dropdown__menu-wrapper .notion-dropdown__menu .notion-dropdown__option-list {
+    padding: 0 !important;
+    flex-wrap: wrap !important;
+  }
+
+  .notion-dropdown__menu-wrapper .notion-dropdown__menu .notion-dropdown__option {
+    padding: 5px 12px !important;
+  }
+
+  .notion-dropdown__menu.initial-state {
+    z-index: 1 !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .notion-dropdown__menu.animate-in.animate-out,
+  .notion-dropdown__menu.animate-in,
+  .notion-dropdown__menu.animate-out {
+    animation: none !important;
+  }
+
+  .notion-dropdown__menu {
+    width: 80% !important;
+    margin: 0 auto !important;
+    background: none !important;
+    box-shadow: unset !important;
+    position: relative !important;
+  }
+
+  .notion-dropdown__menu .notion-dropdown__option-list {
     display: flex !important;
     gap: 8px !important;
-    flex-wrap: wrap !important;
-    padding: 0 !important;
-    pointer-events: auto !important;
-    opacity: 1 !important;
-    visibility: visible !important;
   }
-  html body .notion-dropdown__option {
-    padding: 5px 12px !important;
+
+  .notion-dropdown__menu .notion-dropdown__option.active {
+    background: var(--picker-active-bg-color) !important;
+    border: 1px solid var(--picker-active-border-color) !important;
+  }
+  .notion-dropdown__menu .notion-dropdown__option.active p {
+    color: var(--picker-active-text-color) !important;
+  }
+
+  .notion-dropdown__menu .notion-dropdown__option {
     border-radius: var(--picker-border-radius) !important;
     border: 1px solid var(--picker-border-color) !important;
     transition: all 0.15s ease-in-out !important;
     align-items: center !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    user-select: none !important;
   }
-  html body .notion-dropdown__option:hover {
+  .notion-dropdown__menu .notion-dropdown__option:hover {
     background: var(--picker-hover-bg-color) !important;
     border-color: var(--picker-hover-border-color) !important;
   }
-  html body .notion-dropdown__option:hover p { color: var(--picker-hover-text-color) !important; }
-  html body .notion-dropdown__option.active {
-    background: var(--picker-active-bg-color) !important;
-    border-color: var(--picker-active-border-color) !important;
+  .notion-dropdown__menu .notion-dropdown__option:hover p {
+    color: var(--picker-hover-text-color) !important;
   }
-  html body .notion-dropdown__option.active p { color: var(--picker-active-text-color) !important; }
-  html body .notion-dropdown__option p {
+  .notion-dropdown__menu .notion-dropdown__option p {
     font-family: var(--sc-font-display) !important;
     font-size: 13px !important;
     font-weight: 500 !important;
-    letter-spacing: -0.005em !important;
+    letter-spacing: -0.3px !important;
     color: var(--picker-text-color) !important;
-    pointer-events: none !important;  /* let click bubble to .option */
   }
 }
+
+.notion-collection-page .notion-dropdown__menu-wrapper { left: 0 !important; }
 
 
 /* §11 ==== IMAGES, CAPTIONS, BOOKMARKS ===================================== */
