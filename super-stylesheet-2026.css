@@ -176,6 +176,28 @@ html, body {
 #page-index .notion-header__cover.no-cover,
 .page__index .notion-header__cover.no-cover { display: none !important; }
 
+/* Tighten the gap between the homepage title block and the first section
+   that follows it. Without the cover and icon there's too much rhythm. */
+#page-index .notion-header,
+.page__index .notion-header {
+  padding-bottom: 8px !important;
+  margin-bottom: 0 !important;
+}
+#page-index .notion-header__title-wrapper,
+.page__index .notion-header__title-wrapper {
+  margin-bottom: 8px !important;
+}
+#page-index .notion-header__content,
+.page__index .notion-header__content {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+/* And the first content block after the header on the homepage */
+#page-index .notion-header + *,
+.page__index .notion-header + * {
+  margin-top: 16px !important;
+}
+
 .notion-header__icon-wrapper {
   margin-bottom: 16px !important;
 }
@@ -564,6 +586,65 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 .notion-collection-list .notion-property__title .notion-semantic-string { white-space: pre-wrap !important; }
 .notion-collection-list .notion-property__title .notion-semantic-string span { border: none !important; }
 
+
+/* §10b INLINE TAG LIST (homepage Tags column) ============================
+   The right-rail "Tags" inline collection list. Cap to 5 visible items,
+   tighten vertical rhythm, and turn the existing hashtag icon Super injects
+   into a small gray "#" prefix instead of the default 18px raster. */
+
+.notion-collection.inline .notion-collection-list { gap: 6px !important; margin-top: 8px !important; }
+
+/* Cap to 5 items */
+.notion-collection.inline .notion-collection-list > .notion-collection-list__item:nth-child(n+6) {
+  display: none !important;
+}
+
+/* Compact item */
+.notion-collection.inline .notion-collection-list__item {
+  padding: 6px 10px !important;
+  border-radius: var(--sc-r-sm) !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+/* Re-show the icon wrapper inside inline collection lists ONLY (it's hidden globally
+   by the rule at §9). Then we rewrite its visual to a "#" glyph in gray. */
+.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 12px !important;
+  height: auto !important;
+  margin-right: 6px !important;
+  position: relative !important;
+}
+/* Hide the raster hashtag image */
+.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper .notion-icon,
+.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper img {
+  display: none !important;
+}
+/* Replace with a typographic "#" */
+.notion-collection.inline .notion-collection-list .notion-property__title__icon-wrapper::before {
+  content: "#";
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  font-size: 0.95em;
+  line-height: 1;
+  color: var(--sc-text-muted, #6b6b6b);
+  letter-spacing: 0;
+}
+
+/* Title runs inline next to the # */
+.notion-collection.inline .notion-collection-list .notion-property__title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  line-height: 1.3 !important;
+}
+
 /* Dropdown filter — render as horizontal pill row on >= 576px */
 .notion-dropdown__menu-header,
 .notion-dropdown__option-icon,
@@ -575,22 +656,46 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 }
 
 @media all and (min-width: 576px) {
-  .notion-dropdown {
+  /* Wrapper layout */
+  html body .notion-dropdown {
     width: 100% !important;
     z-index: 1 !important;
     margin-bottom: 16px !important;
+    pointer-events: auto !important;
   }
-  .notion-dropdown__button { display: none !important; }
-  .notion-dropdown__menu-wrapper { position: relative !important; height: auto !important; }
+
+  /* Hide the button via visibility, NOT display:none — keeps Super's click
+     handler bindings intact in case it walks the DOM on init. */
+  html body .notion-dropdown__button {
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 0 !important;
+  }
+
+  /* The wrapper around the popup menu — must allow clicks through to it */
+  html body .notion-dropdown__menu-wrapper {
+    position: relative !important;
+    height: auto !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
 
   /* CRITICAL: the rendered HTML has class "initial-state close" — Super's
-     own CSS collapses .close to height 0 / hides the option list. We force
-     the menu open + interactive on desktop, regardless of the close class. */
-  .notion-dropdown__menu,
-  .notion-dropdown__menu.initial-state,
-  .notion-dropdown__menu.close,
-  .notion-dropdown__menu.initial-state.close,
-  .notion-dropdown__menu.open {
+     own CSS collapses .close to opacity:0 / scale(.95) / pointer-events:none
+     and the button toggles it. We force the menu open + interactive on
+     desktop, regardless of close/initial-state/animate-out. We escalate
+     specificity with html body to outrank Super's own rules. */
+  html body .notion-dropdown__menu,
+  html body .notion-dropdown__menu.initial-state,
+  html body .notion-dropdown__menu.close,
+  html body .notion-dropdown__menu.initial-state.close,
+  html body .notion-dropdown__menu.open,
+  html body .notion-dropdown__menu.animate-in,
+  html body .notion-dropdown__menu.animate-out,
+  html body .notion-dropdown__menu.animate-in.animate-out {
     width: 100% !important;
     height: auto !important;
     max-height: none !important;
@@ -598,28 +703,38 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
     background: none !important;
     box-shadow: none !important;
     border: none !important;
-    border-radius: var(--sc-r-md) !important;
+    border-radius: 0 !important;
     transform: none !important;
+    -webkit-transform: none !important;
     left: auto !important;
     top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
     position: relative !important;
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
     overflow: visible !important;
     display: block !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    filter: none !important;
   }
-  .notion-dropdown__menu.animate-in,
-  .notion-dropdown__menu.animate-out,
-  .notion-dropdown__menu.animate-in.animate-out { animation: none !important; }
-  .notion-dropdown__option-list {
+
+  html body .notion-dropdown__option-list {
     display: flex !important;
     gap: 8px !important;
     flex-wrap: wrap !important;
     padding: 0 !important;
     pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
-  .notion-dropdown__option {
+  html body .notion-dropdown__option {
     padding: 5px 12px !important;
     border-radius: var(--picker-border-radius) !important;
     border: 1px solid var(--picker-border-color) !important;
@@ -627,24 +742,27 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
     align-items: center !important;
     cursor: pointer !important;
     pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    user-select: none !important;
   }
-  .notion-dropdown__option:hover {
+  html body .notion-dropdown__option:hover {
     background: var(--picker-hover-bg-color) !important;
     border-color: var(--picker-hover-border-color) !important;
   }
-  .notion-dropdown__option:hover p { color: var(--picker-hover-text-color) !important; }
-  .notion-dropdown__option.active {
+  html body .notion-dropdown__option:hover p { color: var(--picker-hover-text-color) !important; }
+  html body .notion-dropdown__option.active {
     background: var(--picker-active-bg-color) !important;
     border-color: var(--picker-active-border-color) !important;
   }
-  .notion-dropdown__option.active p { color: var(--picker-active-text-color) !important; }
-  .notion-dropdown__option p {
+  html body .notion-dropdown__option.active p { color: var(--picker-active-text-color) !important; }
+  html body .notion-dropdown__option p {
     font-family: var(--sc-font-display) !important;
     font-size: 13px !important;
     font-weight: 500 !important;
     letter-spacing: -0.005em !important;
     color: var(--picker-text-color) !important;
-    pointer-events: auto !important;
+    pointer-events: none !important;  /* let click bubble to .option */
   }
 }
 
