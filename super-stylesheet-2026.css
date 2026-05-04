@@ -222,23 +222,23 @@ html, body {
   margin-top: 0 !important;
 }
 
-/* Tagline: more prominent, sits just below the navbar */
+/* Tagline: sits below the navbar, left-aligned with "Featured Essay" */
 #page-index #block-6136d1971ea341028ec5f1f19bae6dfb,
 .page__index #block-6136d1971ea341028ec5f1f19bae6dfb {
-  text-align: center !important;
-  margin: 24px auto 32px auto !important;
-  max-width: 880px !important;
+  text-align: left !important;
+  margin: 24px 0 32px 0 !important;
+  max-width: none !important;
   font-family: var(--sc-font-display) !important;
-  font-size: 22px !important;
+  font-size: 16px !important;
   font-weight: 600 !important;
   letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
   color: var(--sc-text, #2a2a2a) !important;
-  line-height: 1.35 !important;
+  line-height: 1.4 !important;
 }
 #page-index #block-6136d1971ea341028ec5f1f19bae6dfb *,
 .page__index #block-6136d1971ea341028ec5f1f19bae6dfb * {
-  text-align: center !important;
+  text-align: left !important;
   font-family: inherit !important;
   letter-spacing: inherit !important;
   font-weight: inherit !important;
@@ -507,11 +507,12 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 
 .notion-callout:has(> .notion-callout__content > .notion-table-of-contents),
 .notion-callout:has(.notion-table-of-contents) {
-  background: transparent !important;
+  background: var(--sc-base-gray, #f5f4ee) !important;
   border: 0 !important;
   border-left: 0 !important;
   box-shadow: none !important;
-  padding: 12px 0 !important;
+  padding: 18px 22px !important;
+  border-radius: var(--sc-r-md, 12px) !important;
   margin-bottom: 16px !important;
 }
 .notion-callout:has(.notion-table-of-contents):hover { box-shadow: none !important; }
@@ -578,6 +579,46 @@ h1.notion-heading *, h2.notion-heading *, h3.notion-heading *, h4.notion-heading
 .notion-table-of-contents__item .notion-semantic-string,
 .notion-table-of-contents__item .notion-semantic-string * {
   font-weight: 500 !important;
+}
+
+/* Float-flow: when an article uses a 2-column layout where the right column
+   contains a TOC, let the body text WRAP around the TOC instead of leaving
+   half a column of whitespace below the text. We achieve this by:
+     - Collapsing the column-list flex layout (it normally side-by-sides
+       columns at fixed widths and equalizes heights).
+     - Letting the TOC column float right at its native width.
+     - Letting the text column flow as a normal block.
+   Scoped via :has() so only TOC-containing column-lists are affected;
+   regular 2-column blocks keep the standard side-by-side layout.
+
+   This depends on .notion-callout containing .notion-table-of-contents — the
+   pattern Super emits when you use Notion's TOC inside a callout. */
+@media all and (min-width: 900px) {
+  .notion-column-list:has(> .notion-column .notion-callout:has(.notion-table-of-contents)) {
+    display: block !important;
+  }
+  /* Right column = the one containing the TOC: float it right */
+  .notion-column-list:has(> .notion-column .notion-callout:has(.notion-table-of-contents))
+    > .notion-column:has(.notion-callout:has(.notion-table-of-contents)) {
+    float: right !important;
+    width: 38% !important;
+    margin-left: 32px !important;
+    margin-bottom: 16px !important;
+    margin-inline-start: 0 !important;  /* override Notion's per-column inline style */
+  }
+  /* Left/other columns flow as normal blocks under/around the float */
+  .notion-column-list:has(> .notion-column .notion-callout:has(.notion-table-of-contents))
+    > .notion-column:not(:has(.notion-callout:has(.notion-table-of-contents))) {
+    width: auto !important;
+    margin-inline-start: 0 !important;
+    display: block !important;
+  }
+  /* Clear the float so subsequent siblings don't intrude */
+  .notion-column-list:has(> .notion-column .notion-callout:has(.notion-table-of-contents))::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 }
 
 
