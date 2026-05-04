@@ -178,7 +178,8 @@ html, body {
 
 /* The H1 page title is also redundant — the navbar logo already says
    "Sergio Caredda". Hide it accessibly (kept in DOM for SEO + screen
-   readers, just visually removed). */
+   readers, just visually removed). Collapse the now-empty title-wrapper
+   so it adds no vertical space. */
 #page-index .notion-header__title,
 .page__index .notion-header__title {
   position: absolute !important;
@@ -192,48 +193,48 @@ html, body {
   border: 0 !important;
 }
 
-/* Tighten the gap between the homepage title block and the first section
-   that follows it. Without the cover and icon there's too much rhythm. */
+/* Collapse all of the now-empty header chrome on the homepage so the
+   tagline sits directly under the navbar. */
 #page-index .notion-header,
-.page__index .notion-header {
-  padding-bottom: 8px !important;
-  margin-bottom: 0 !important;
-}
-#page-index .notion-header__title-wrapper,
-.page__index .notion-header__title-wrapper {
-  margin-bottom: 8px !important;
+.page__index .notion-header,
+#page-index .notion-header.page,
+.page__index .notion-header.page {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
 }
 #page-index .notion-header__content,
-.page__index .notion-header__content {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+.page__index .notion-header__content,
+#page-index .notion-header__title-wrapper,
+.page__index .notion-header__title-wrapper {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  height: 0 !important;
 }
-/* And the first content block after the header on the homepage */
+#page-index .notion-root,
+.page__index .notion-root {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
 #page-index .notion-header + *,
 .page__index .notion-header + * {
-  margin-top: 16px !important;
+  margin-top: 0 !important;
 }
 
-/* Tighten the top of the homepage article container itself, and center
-   the tagline (the first .notion-text inside .notion-root). The tagline
-   block id is 6136d1971ea341028ec5f1f19bae6dfb. The empty notion-text
-   that follows is just a Notion spacer — collapse it so the tagline sits
-   close to "Featured Essay". */
-#page-index .notion-root,
-.page__index .notion-root { padding-top: 0 !important; margin-top: 0 !important; }
-
+/* Tagline: more prominent, sits just below the navbar */
 #page-index #block-6136d1971ea341028ec5f1f19bae6dfb,
 .page__index #block-6136d1971ea341028ec5f1f19bae6dfb {
   text-align: center !important;
-  margin: 0 auto 16px auto !important;
-  max-width: 720px !important;
+  margin: 24px auto 32px auto !important;
+  max-width: 880px !important;
   font-family: var(--sc-font-display) !important;
-  font-size: 14px !important;
+  font-size: 22px !important;
   font-weight: 600 !important;
-  letter-spacing: 0.08em !important;
+  letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
-  color: var(--sc-text-muted, #6b6b6b) !important;
-  line-height: 1.4 !important;
+  color: var(--sc-text, #2a2a2a) !important;
+  line-height: 1.35 !important;
 }
 #page-index #block-6136d1971ea341028ec5f1f19bae6dfb *,
 .page__index #block-6136d1971ea341028ec5f1f19bae6dfb * {
@@ -242,6 +243,7 @@ html, body {
   letter-spacing: inherit !important;
   font-weight: inherit !important;
   color: inherit !important;
+  font-size: inherit !important;
 }
 
 /* Collapse empty notion-text spacers on the homepage */
